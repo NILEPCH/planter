@@ -1,4 +1,5 @@
-%%writefile test2_app.py
+%%writefile test_app.py
+
 import streamlit as st
 from PIL import Image
 from diffusers import StableDiffusionPipeline
@@ -28,9 +29,9 @@ class StableDiffusionLoader:
         return image
 
 if __name__ == '__main__':
-    st.set_page_config(page_title='Diffusion Model Generator', layout='centered')
-    st.image('/content/fig/planter_logo.png', use_column_width=True)
-    st.caption('*“Blooming every doorstep to your place”*')  # Italicized caption
+    st.set_page_config(page_title='Diffusion Model Generator')
+    st.image('/content/fig/planter_logo.png')
+    st.caption('“ Blooming every doorstep to your place “')
 
     # Main vertical boxes (containers)
     top_container = st.container()
@@ -38,31 +39,24 @@ if __name__ == '__main__':
         col1, col2 = st.columns([1, 1])
 
         with col1:
-            st.subheader('Upload Image')
+            st.subheader('Upload Image and Enter Prompt')
             uploaded_file = st.file_uploader("Choose an image (optional)", type=['jpg', 'png', 'jpeg'])
-            if uploaded_file:
-                image = Image.open(uploaded_file)
-                st.image(image, caption='Uploaded Image', use_column_width=True)  # Display uploaded image immediately
+            prompt = st.text_area('Input the prompt desired')
 
         with col2:
             st.subheader('Specify Your Preferences')
-            light_intensity = st.selectbox("Light Intensity", ["Low", "Medium", "High"])
-            plant_size = st.selectbox("Plant Size", ["Small", "Medium", "High"])
-            plant_category = st.selectbox("Plant Category", ["Herb", "Tree", "Flower"])
-            care_difficulty = st.selectbox("Level of Difficulty to Take Care", ["Easy", "Medium", "Hard"])
-
-    # Prompt input below image and selection boxes
-    prompt_container = st.container()
-    with prompt_container:
-        st.subheader('Enter Your Prompt')
-        prompt = st.text_area("", 'Input the prompt desired', help="Enter a descriptive prompt for the image generation.")
+            light_level = st.selectbox("Light Level", ["Low", "Medium", "High"])
+            maintenance_level = st.selectbox("Maintenance Level", ["Low", "Medium", "High"])
+            plant_size = st.selectbox("Plant Size", ["Small", "Medium", "Large"])
+            plant_category = st.selectbox("Plant Category", ["Indoor", "Outdoor", "Flowering", "Non-flowering"])
+            theme = st.selectbox("Theme", ["Nature", "Abstract", "Urban", "Fantasy"])
 
     # Bottom container for displaying the generated image
     bottom_container = st.container()
     with bottom_container:
         if st.button("Generate Image"):
-            # Combine user inputs into a full prompt
-            full_prompt = f"{prompt}. Light Intensity: {light_intensity}, Plant Size: {plant_size}, Plant Category: {plant_category}, Care Difficulty: {care_difficulty}."
+            # Concatenate preferences with the prompt
+            full_prompt = f"{prompt}. Light Level: {light_level}, Maintenance Level: {maintenance_level}, Plant Size: {plant_size}, Plant Category: {plant_category}, Theme: {theme}"
             if full_prompt:
                 with st.spinner('Generating image based on prompt and preferences...'):
                     sd = StableDiffusionLoader(full_prompt)
@@ -75,3 +69,4 @@ if __name__ == '__main__':
                         st.error(f"Failed to generate image: {str(e)}")
             else:
                 st.warning("Please enter a prompt and select preferences to generate an image.")
+
