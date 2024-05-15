@@ -1,4 +1,4 @@
-%%writefile app.py
+%%writefile main.py
 
 import torch
 from diffusers import StableDiffusionPipeline
