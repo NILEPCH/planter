@@ -1,5 +1,3 @@
-%%writefile main.py
-
 import torch
 from diffusers import StableDiffusionPipeline
 from torch import autocast
